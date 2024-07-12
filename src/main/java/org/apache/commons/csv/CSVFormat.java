@@ -1406,10 +1406,10 @@ public final class CSVFormat implements Serializable {
 
     static String[] toStringArray(final Object[] values) {
         if (values == null) {
-            return null;
+            return new String[0];
         }
         final String[] strings = new String[values.length];
-        Arrays.setAll(strings, i -> Objects.toString(values[i], null));
+        Arrays.setAll(strings, i -> Objects.toString(values[i], ""));
         return strings;
     }
 
@@ -2292,7 +2292,7 @@ public final class CSVFormat implements Serializable {
     private boolean isDelimiterStart(char c, CharSequence charSeq, int pos, char[] delimArray, int delimLength) {
         return isDelimiter(c, charSeq, pos, delimArray, delimLength);
     }
-        
+
     /*
      * Note: Must only be called if escaping is enabled, otherwise can throw exceptions.
      */
