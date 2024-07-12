@@ -2262,7 +2262,7 @@ public final class CSVFormat implements Serializable {
                     c = 'r'; // convert isCR to 'r'
                 }
                 escape(c, appendable);
-                if (isDelimiterStart) {
+                {
                     while (++pos < end && isDelimiter(charSeq.charAt(pos), delim, delimLength)) {
                     
                         escape(charSeq.charAt(pos), appendable);
