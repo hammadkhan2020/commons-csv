@@ -882,12 +882,12 @@ public final class CSVFormat implements Serializable {
          * @see CSVFormat#POSTGRESQL_CSV
          * @since 1.5
          */
-        PostgreSQLCsv(POSTGRESQL_CSV),
+        POSTGRESQL_CSV(POSTGRESQL_CSV),
 
         /**
          * @see CSVFormat#POSTGRESQL_CSV
          */
-        PostgreSQLText(POSTGRESQL_TEXT),
+        POSTGRESQL_TEXT(POSTGRESQL_TEXT),
 
         /**
          * @see CSVFormat#RFC4180
