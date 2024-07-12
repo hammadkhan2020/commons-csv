@@ -405,7 +405,7 @@ public final class CSVFormat implements Serializable {
         public Builder setDelimiter(final char delimiter) {
             return setDelimiter(String.valueOf(delimiter));
         }
-        
+
         /**
          * Sets the delimiter character.
          *
@@ -2517,34 +2517,64 @@ public final class CSVFormat implements Serializable {
      * @throws IllegalArgumentException Throw when any attribute is invalid or inconsistent with other attributes.
      */
     private void validate() throws IllegalArgumentException {
+        validateLineBreakInDelimiter();
+        validateQuoteCharacterNotSameAsDelimiter();
+        validateEscapeCharacterNotSameAsDelimiter();
+        validateCommentMarkerNotSameAsDelimiter();
+        validateQuoteCharacterNotSameAsCommentMarker();
+        validateEscapeCharacterNotSameAsCommentMarker();
+        validateEscapeCharacterWhenQuoteModeNone();
+        validateHeaders();
+    }
+    
+    private void validateLineBreakInDelimiter() throws IllegalArgumentException {
         if (containsLineBreak(delimiter)) {
             throw new IllegalArgumentException("The delimiter cannot be a line break");
         }
-        if (quoteCharacter != null && contains(delimiter, quoteCharacter.charValue())) {  // N.B. Explicit (un)boxing is intentional
+    }
+    
+    private void validateQuoteCharacterNotSameAsDelimiter() throws IllegalArgumentException {
+        if (quoteCharacter != null && contains(delimiter, quoteCharacter.charValue())) {
             throw new IllegalArgumentException("The quoteChar character and the delimiter cannot be the same ('" + quoteCharacter + "')");
         }
-        if (escapeCharacter != null && contains(delimiter, escapeCharacter.charValue())) { // N.B. Explicit (un)boxing is intentional
+    }
+    
+    private void validateEscapeCharacterNotSameAsDelimiter() throws IllegalArgumentException {
+        if (escapeCharacter != null && contains(delimiter, escapeCharacter.charValue())) {
             throw new IllegalArgumentException("The escape character and the delimiter cannot be the same ('" + escapeCharacter + "')");
         }
-        if (commentMarker != null && contains(delimiter, commentMarker.charValue())) { // N.B. Explicit (un)boxing is intentional
+    }
+    
+    private void validateCommentMarkerNotSameAsDelimiter() throws IllegalArgumentException {
+        if (commentMarker != null && contains(delimiter, commentMarker.charValue())) {
             throw new IllegalArgumentException("The comment start character and the delimiter cannot be the same ('" + commentMarker + "')");
         }
+    }
+    
+    private void validateQuoteCharacterNotSameAsCommentMarker() throws IllegalArgumentException {
         if (quoteCharacter != null && quoteCharacter.equals(commentMarker)) {
             throw new IllegalArgumentException("The comment start character and the quoteChar cannot be the same ('" + commentMarker + "')");
         }
+    }
+    
+    private void validateEscapeCharacterNotSameAsCommentMarker() throws IllegalArgumentException {
         if (escapeCharacter != null && escapeCharacter.equals(commentMarker)) {
             throw new IllegalArgumentException("The comment start and the escape character cannot be the same ('" + commentMarker + "')");
         }
+    }
+    
+    private void validateEscapeCharacterWhenQuoteModeNone() throws IllegalArgumentException {
         if (escapeCharacter == null && quoteMode == QuoteMode.NONE) {
             throw new IllegalArgumentException("Quote mode set to NONE but no escape character is set");
         }
-        // Validate headers
+    }
+    
+    private void validateHeaders() throws IllegalArgumentException {
         if (headers != null && duplicateHeaderMode != DuplicateHeaderMode.ALLOW_ALL) {
             final Set<String> dupCheckSet = new HashSet<>(headers.length);
             final boolean emptyDuplicatesAllowed = duplicateHeaderMode == DuplicateHeaderMode.ALLOW_EMPTY;
             for (final String header : headers) {
                 final boolean blank = isBlank(header);
-                // Sanitize all empty headers to the empty string "" when checking duplicates
                 final boolean containsHeader = !dupCheckSet.add(blank ? "" : header);
                 if (containsHeader && !(blank && emptyDuplicatesAllowed)) {
                     throw new IllegalArgumentException(
