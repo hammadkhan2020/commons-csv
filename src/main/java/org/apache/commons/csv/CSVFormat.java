@@ -2237,45 +2237,62 @@ public final class CSVFormat implements Serializable {
      */
     private void printWithEscapes(final CharSequence charSeq, final Appendable appendable) throws IOException {
         int start = 0;
-        int pos = 0;
         final int end = charSeq.length();
         final char[] delimArray = getDelimiterCharArray();
         final int delimLength = delimArray.length;
         final char escape = getEscapeChar();
-
-        while (pos < end) {
+    
+        for (int pos = 0; pos < end; pos++) {
             char c = charSeq.charAt(pos);
-            final boolean isDelimiterStart = isDelimiter(c, charSeq, pos, delimArray, delimLength);
-            final boolean isCr = c == Constants.CR;
-            final boolean isLf = c == Constants.LF;
-            if (isCr || isLf || c == escape || isDelimiterStart) {
-                // write out segment up until this char
+            if (needsEscaping(c, charSeq, pos, delimArray, delimLength)) {
+                // Write out segment up until this char
                 if (pos > start) {
                     appendable.append(charSeq, start, pos);
                 }
-                if (isLf) {
-                    c = 'n';
-                } else if (isCr) {
-                    c = 'r';
-                }
+    
+                c = transformCharacterIfNeeded(c);
                 escape(c, appendable);
-                if (isDelimiterStart) {
-                    for (int i = 1; i < delimLength; i++) {
-                        pos++;
-                        escape(charSeq.charAt(pos), appendable);
-                    }
+    
+                if (isDelimiterStart(c, charSeq, pos, delimArray, delimLength)) {
+                    pos = escapeDelimiter(charSeq, appendable, pos, delimLength);
                 }
-                start = pos + 1; // start on the current char after this one
+    
+                start = pos + 1; // Move start position past the current character
             }
-            pos++;
         }
-
-        // write last segment
-        if (pos > start) {
-            appendable.append(charSeq, start, pos);
+    
+        // Write last segment
+        if (charSeq.length() > start) {
+            appendable.append(charSeq, start, charSeq.length());
         }
     }
-
+    
+    private boolean needsEscaping(char c, CharSequence charSeq, int pos, char[] delimArray, int delimLength) {
+        return c == Constants.CR || c == Constants.LF || c == getEscapeChar() || 
+               isDelimiterStart(c, charSeq, pos, delimArray, delimLength);
+    }
+    
+    private char transformCharacterIfNeeded(char c) {
+        if (c == Constants.LF) {
+            return 'n';
+        } else if (c == Constants.CR) {
+            return 'r';
+        }
+        return c;
+    }
+    
+    private int escapeDelimiter(CharSequence charSeq, Appendable appendable, int pos, int delimLength) throws IOException {
+        for (int i = 1; i < delimLength; i++) {
+            pos++;
+            escape(charSeq.charAt(pos), appendable);
+        }
+        return pos;
+    }
+    
+    private boolean isDelimiterStart(char c, CharSequence charSeq, int pos, char[] delimArray, int delimLength) {
+        return isDelimiter(c, charSeq, pos, delimArray, delimLength);
+    }
+        
     /*
      * Note: Must only be called if escaping is enabled, otherwise can throw exceptions.
      */
