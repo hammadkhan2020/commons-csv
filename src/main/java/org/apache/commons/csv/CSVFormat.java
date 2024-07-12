@@ -837,7 +837,7 @@ public final class CSVFormat implements Serializable {
         /**
          * @see CSVFormat#DEFAULT
          */
-        Default(DEFAULT),
+        DEFAULT(DEFAULT),
 
         /**
          * @see CSVFormat#EXCEL
