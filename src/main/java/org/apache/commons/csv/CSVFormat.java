@@ -405,8 +405,13 @@ public final class CSVFormat implements Serializable {
         public Builder setDelimiter(final char delimiter) {
             return setDelimiter(String.valueOf(delimiter));
         }
-
-       
+        
+        /**
+         * Sets the delimiter character.
+         *
+         * @param delimiter the delimiter character.
+         * @return This instance.
+         */
         public Builder setDelimiter(final String delimiter) {
             if (containsLineBreak(delimiter)) {
                 throw new IllegalArgumentException("The delimiter cannot be a line break");
