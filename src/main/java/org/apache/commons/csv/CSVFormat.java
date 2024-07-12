@@ -848,35 +848,35 @@ public final class CSVFormat implements Serializable {
          * @see CSVFormat#INFORMIX_UNLOAD
          * @since 1.3
          */
-        InformixUnload(INFORMIX_UNLOAD),
+        INFORMIX_UNLOAD(INFORMIX_UNLOAD),
 
         /**
          * @see CSVFormat#INFORMIX_UNLOAD_CSV
          * @since 1.3
          */
-        InformixUnloadCsv(INFORMIX_UNLOAD_CSV),
+        INFORMIX_UNLOAD_CSV(INFORMIX_UNLOAD_CSV),
 
         /**
          * @see CSVFormat#MONGODB_CSV
          * @since 1.7
          */
-        MongoDBCsv(MONGODB_CSV),
+        MONGODB_CSV(MONGODB_CSV),
 
         /**
          * @see CSVFormat#MONGODB_TSV
          * @since 1.7
          */
-        MongoDBTsv(MONGODB_TSV),
+        MONGODB_TSV(MONGODB_TSV),
 
         /**
          * @see CSVFormat#MYSQL
          */
-        MySQL(MYSQL),
+        MYSQL(MYSQL),
 
         /**
          * @see CSVFormat#ORACLE
          */
-        Oracle(ORACLE),
+        ORACLE(ORACLE),
 
         /**
          * @see CSVFormat#POSTGRESQL_CSV
