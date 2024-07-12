@@ -842,7 +842,7 @@ public final class CSVFormat implements Serializable {
         /**
          * @see CSVFormat#EXCEL
          */
-        Excel(EXCEL),
+        EXCEL(EXCEL),
 
         /**
          * @see CSVFormat#INFORMIX_UNLOAD
