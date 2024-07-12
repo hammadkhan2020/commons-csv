@@ -2236,26 +2236,30 @@ public final class CSVFormat implements Serializable {
      * Note: Must only be called if escaping is enabled, otherwise can throw exceptions.
      */
     private void printWithEscapes(final CharSequence charSeq, final Appendable appendable) throws IOException {
-        int start = 0;
-        int pos = 0;
-        final int end = charSeq.length();
+        
         final char[] delimArray = getDelimiterCharArray();
         final int delimLength = delimArray.length;
         final char escape = getEscapeChar();
+
+        int start = 0;
+        int pos = 0;
+        final int end = charSeq.length();
+
         while (pos < end) {
             char c = charSeq.charAt(pos);
-            final boolean isDelimiterStart = isDelimiter(c, charSeq, pos, delimArray, delimLength);
+            
             final boolean isCr = c == Constants.CR;
             final boolean isLf = c == Constants.LF;
-            if (isCr || isLf || c == escape || isDelimiterStart) {
-                // write out segment up until this char
+            if (isDelimiter(c, charSeq, pos, delimArray, delimLength) || isCr || isLf || c == escape){
+                // handle escaped character or delimiter
                 if (pos > start) {
                     appendable.append(charSeq, start, pos);
+                    // write out segment until this char
                 }
                 if (isLf) {
-                    c = 'n';
+                    c = 'n'; // convert isLF to 'n'
                 } else if (isCr) {
-                    c = 'r';
+                    c = 'r'; // convert isCR to 'r'
                 }
                 escape(c, appendable);
                 if (isDelimiterStart) {
