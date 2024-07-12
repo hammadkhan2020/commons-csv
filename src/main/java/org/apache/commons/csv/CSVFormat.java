@@ -2263,8 +2263,8 @@ public final class CSVFormat implements Serializable {
                 }
                 escape(c, appendable);
                 if (isDelimiterStart) {
-                    for (int i = 1; i < delimLength; i++) {
-                        pos++;
+                    while (++pos < end && isDelimiter(charSeq.charAt(pos), delim, delimLength)) {
+                    
                         escape(charSeq.charAt(pos), appendable);
                     }
                 }
