@@ -484,7 +484,28 @@
               </testIncludes>
             </configuration>
           </plugin>
-          
+
+          <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>0.16.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*.md</exclude>
+                                <exclude>**/*.xml</exclude>
+                                <exclude>**/*.properties</exclude>
+                                <!-- Add other file patterns as needed -->
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
           <!-- jacoco -->
           <plugin>
                 <groupId>org.jacoco</groupId>
